@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dapur ALSYEFA</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff7f0;
+    margin: 0;
+    padding: 20px;
+    color: #493323;
+}
+
+.container {
+    max-width: 480px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px #00000012;
+}
+
+h1, h2 { color: #8b4513; }
+h1, .subtitle { text-align: center; }
+.subtitle { color: #99765e; }
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff8f0;
+    padding: 10px;
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+.menu img {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.menu h3 { margin: 0 0 8px; }
+.menu p { margin: 0 0 8px; color: #8b4513; }
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.btn-tambah {
+    background: #8b4513;
+    color: white;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border: 1px solid #dfd2c7;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.menu select {
+    margin: 0 0 10px;
+    padding: 9px;
+}
+
+.cart {
+    background: #fff8f0;
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.cart-item {
+    border-bottom: 1px solid #eadfd4;
+    padding: 12px 0;
+}
+
+.cart-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.controls button {
+    background: #ead6c5;
+    color: #633b20;
+    min-width: 35px;
+}
+
+.controls .hapus {
+    background: #ffe1e1;
+    color: #a12222;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #8b4513;
+}
+
+.btn-checkout {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: #25d366;
+    color: white;
+    font-size: 16px;
+}
+
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #99765e;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Dapur ALSYEFA</h1>
+<p class="subtitle">
+    Jajanan Sederhana, Bikin Nostalgia!
+</p>
+
+<!-- MENU MARTABAK -->
+<div class="menu">
+    <img src="martabak.jpeg" alt="Martabak Jadul">
+    <div>
+        <h3>Martabak Jadul</h3>
+        <p>Rp5.000 / porsi</p>
+        <button type="button" class="btn-tambah"
+            onclick="tambahKeranjang('Martabak Jadul')">
+            + Tambah
+        </button>
+    </div>
+</div>
+
+<!-- MENU TAHU BAKSO DENGAN PILIHAN TOPPING -->
+<div class="menu">
+    <img src="cilok.jpeg" alt="Kanjilok Bumbu Kacang">
+    <div style="flex:1; min-width:0;">
+        <h3>Kanjilok Bumbu Kacang</h3>
+        <p>Rp5.000 / porsi</p>
+
+
+        <button type="button" class="btn-tambah"
+            onclick="tambahKeranjang('Kanjilok Bumbu Kacang')">
+            + Tambah
+        </button>
+    </div>
+</div>
+
+<!-- KERANJANG -->
+<div class="cart" id="keranjang">
+    <h2>🛒 Keranjang Belanja</h2>
+    <div id="isiKeranjang">Keranjang masih kosong.</div>
+    <div class="total">
+        Total: <span id="totalHarga">Rp0</span>
+    </div>
+</div>
+
+<!-- FORM CHECKOUT -->
+<h2>Form Pemesanan</h2>
+
+<form id="formPesanan">
+    <label for="nama">Nama</label>
+    <input type="text" id="nama"
+        placeholder="Masukkan nama" required>
+
+    <label for="alamat">Alamat / Kelas</label>
+    <textarea id="alamat"
+        placeholder="Masukkan alamat atau kelas"
+        required></textarea>
+
+    <label for="pembayaran">Pembayaran</label>
+    <select id="pembayaran" required>
+        <option value="">-- Pilih Pembayaran --</option>
+        <option value="Tunai">Tunai</option>
+        <option value="Transfer">Transfer</option>
+    </select>
+
+    <label for="catatan">Catatan</label>
+    <textarea id="catatan"
+        placeholder="Catatan tambahan (opsional)"></textarea>
+
+    <button type="submit" class="btn-checkout">
+        Checkout via WhatsApp
+    </button>
+</form>
+
+<p class="footer">Terima kasih sudah memesan ♡</p>
+
+</div>
+
+<script>
+// GANTI dengan nomor WhatsApp penjual
+// Contoh: 6281234567890
+const nomorWA = "6281234866506";
+
+// Harga per porsi
+const hargaMenu = {
+    "Martabak Jadul": 5000,
+    "Kanjilok Bumbu Kacang": 5000
+};
+
+// Keranjang berdasarkan menu dan topping
+const keranjang = {};
+
+function rupiah(angka) {
+    return "Rp" + angka.toLocaleString("id-ID");
+}
+
+function tambahKeranjang(nama) {
+  let topping = "";
+
+
+  const id = nama ;
+
+  if (!keranjang[id]) {
+    keranjang[id] = {
+      nama: nama,
+      topping: topping,
+      jumlah: 0
+    };
+  }
+
+  if (keranjang[id].jumlah >= 99) {
+    alert("Maksimal 99 porsi!");
+    return;
+  }
+
+  keranjang[id].jumlah++;
+  tampilkanKeranjang();
+}
+
+function ubahJumlah(id, perubahan) {
+    if (!keranjang[id]) return;
+
+    const jumlahBaru = keranjang[id].jumlah + perubahan;
+
+    if (jumlahBaru <= 0) {
+        delete keranjang[id];
+    } else if (jumlahBaru <= 99) {
+        keranjang[id].jumlah = jumlahBaru;
+    } else {
+        alert("Maksimal 99 porsi per menu.");
+    }
+
+    tampilkanKeranjang();
+}
+
+function hapusMenu(id) {
+    delete keranjang[id];
+    tampilkanKeranjang();
+}
+
+function tampilkanKeranjang() {
+    const isi = document.getElementById("isiKeranjang");
+    const totalElement = document.getElementById("totalHarga");
+
+    isi.replaceChildren();
+
+    const daftarMenu = Object.keys(keranjang);
+    let total = 0;
+
+    if (daftarMenu.length === 0) {
+        isi.textContent = "Keranjang masih kosong.";
+    }
+
+    daftarMenu.forEach(id => {
+        const itemData = keranjang[id];
+        const subtotal =
+            hargaMenu[itemData.nama] * itemData.jumlah;
+
+        total += subtotal;
+
+        const item = document.createElement("div");
+        item.className = "cart-item";
+
+        const baris = document.createElement("div");
+        baris.className = "cart-row";
+
+        const info = document.createElement("div");
+
+        const judul = document.createElement("strong");
+        judul.textContent = itemData.nama;
+
+        const detail = document.createElement("div");
+
+        if (itemData.nama === "Tahu Bakso") {
+        detail.textContent = "Topping: " + itemData.topping;
+        }
+        const jumlahText = document.createElement("div");
+        jumlahText.textContent = rupiah(hargaMenu[itemData.nama]) +
+            " / porsi";
+
+        info.append(judul, detail, jumlahText);
+
+        const harga = document.createElement("div");
+        harga.textContent = rupiah(subtotal);
+
+        baris.append(info, harga);
+
+        const controls = document.createElement("div");
+        controls.className = "controls";
+
+        function buatTombol(teks, aksi, kelas = "") {
+            const tombol = document.createElement("button");
+            tombol.type = "button";
+            tombol.textContent = teks;
+
+            if (kelas) tombol.className = kelas;
+
+            tombol.addEventListener("click", aksi);
+            return tombol;
+        }
+
+        const kurang = buatTombol("−", () =>
+            ubahJumlah(id, -1));
+
+        const angka = document.createElement("span");
+        angka.textContent = itemData.jumlah + " porsi";
+
+        const tambah = buatTombol("+", () =>
+            ubahJumlah(id, 1));
+
+        const hapus = buatTombol("Hapus", () =>
+            hapusMenu(id), "hapus");
+
+        controls.append(kurang, angka, tambah, hapus);
+        item.append(baris, controls);
+        isi.append(item);
+    });
+
+    totalElement.textContent = rupiah(total);
+}
+
+// CHECKOUT WHATSAPP
+document.getElementById("formPesanan")
+.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const daftarMenu = Object.keys(keranjang);
+
+    if (daftarMenu.length === 0) {
+        alert("Pilih makanan terlebih dahulu!");
+        return;
+    }
+
+    const nama = document.getElementById("nama").value.trim();
+    const alamat = document.getElementById("alamat").value.trim();
+    const pembayaran = document.getElementById("pembayaran").value;
+    const catatan = document.getElementById("catatan").value.trim();
+
+    if (!nama || !alamat || !pembayaran) {
+        alert("Mohon lengkapi form pemesanan.");
+        return;
+    }
+
+    if (!/^62\d{8,15}$/.test(nomorWA)) {
+        alert("Nomor WhatsApp penjual belum diatur. Silakan ganti 6281234866506 dengan nomor penjual.");
+        return;
+    }
+
+    let total = 0;
+    let rincian = "";
+
+    daftarMenu.forEach(id => {
+        const item = keranjang[id];
+        const subtotal = hargaMenu[item.nama] * item.jumlah;
+
+        total += subtotal;
+
+        rincian += item.nama + "\n";
+
+if (item.nama === "Tahu Bakso") {
+  rincian += "Topping: " + item.topping + "\n";
+}
+
+rincian += "Jumlah: " + item.jumlah + " porsi\n";
+rincian += "Subtotal: " + rupiah(subtotal) + "\n\n";
+    });
+
+    const pesan =
+`HALO, SAYA MAU PESAN
+
+Nama: ${nama}
+
+PESANAN:
+${rincian}Total: ${rupiah(total)}
+
+Alamat/Kelas: ${alamat}
+Pembayaran: ${pembayaran}
+Catatan: ${catatan || "-"}
+
+Mohon konfirmasi pesanannya. Terima kasih!`;
+
+    const link = "https://wa.me/" + nomorWA +
+        "?text=" + encodeURIComponent(pesan);
+
+    window.location.href = link;
+});
+</script>
+
+</body>
+</html>
